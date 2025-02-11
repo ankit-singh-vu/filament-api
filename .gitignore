@@ -26,3 +26,4 @@ yarn-error.log
 /nginx/log/error.log
 /bin/node/node_modules
 public/ui
+bin/keys/vm_rsa
