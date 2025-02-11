@@ -1,0 +1,61 @@
+default:
+  tags:
+      - shared
+  image: triophase/pipeline-worker:1.0
+  services:
+  - docker:dind
+stages:
+  - test
+  - deploy
+  - production
+
+# Test stage job
+Build-and-Test:
+  stage: test
+  before_script:
+
+    # Setup .env from .env.template
+    - sh ./bin/pipeline/setup_pipeline.sh test
+    # Login to the Docker registry
+  script:
+    - chmod +x ./bin/pipeline/runpipeline.sh
+    - ./bin/pipeline/runpipeline.sh test
+  after_script:
+    - sh ./bin/pipeline/clean_pipeline.sh test
+  # only:
+  #   refs:
+  #     - init_branch
+
+
+Deploy-to-Staging:
+  stage: deploy
+  before_script:
+
+    # Setup .env from .env.template
+    - sh ./bin/pipeline/setup_pipeline.sh stag
+    # Login to the Docker registry
+  script:
+    - chmod +x ./bin/pipeline/runpipeline.sh
+    - ./bin/pipeline/runpipeline.sh stag
+  
+  after_script:
+    - sh ./bin/pipeline/clean_pipeline.sh stag
+  only:
+    refs:
+      - main 
+
+Deploy-to-Production:
+  stage: production
+  before_script:
+
+    # Setup .env from .env.template
+    - sh ./bin/pipeline/setup_pipeline.sh prod
+    # Login to the Docker registry
+  script:
+    - sh ./bin/pipeline/runpipeline.sh prod
+  
+  after_script:
+    - sh ./bin/pipeline/clean_pipeline.sh prod
+  only:
+    refs:
+      - main 

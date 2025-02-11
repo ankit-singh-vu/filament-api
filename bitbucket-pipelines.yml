@@ -1,0 +1,69 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test, and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+
+image: ubuntu:18.04
+
+# Bitbucket Pipeline Trigger
+pipelines:
+  
+  custom: # Bitbucket Pipeline Trigger that can only be triggered manually
+    autotest:
+    - step:
+        name: "Build and Test"
+        # trigger: 'manual'
+        services:
+        - docker
+        script:
+        - pwd
+        - ls -la
+        - docker ps -a
+        - docker info
+        - docker -v
+        - whoami
+        - apt update -y && apt install jq -y
+        - apt-get -y install apt-transport-https ca-certificates curl git gnupg-agent software-properties-common jq git
+        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+        - apt-key fingerprint 0EBFCD88
+        - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        - apt-get update
+        - curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+        - chmod +x /usr/local/bin/docker-compose
+        - docker-compose --version
+        - git checkout -f $BRANCHNAME_API
+        - sh ./bin/pipeline/setup_pipeline.sh test
+        - chmod +x ./bin/pipeline/runpipeline.sh
+        - ./bin/pipeline/runpipeline.sh test
+        after-script:
+          - sh ./bin/pipeline/clean_pipeline.sh test
+
+    stagingdeploy:
+    - step:
+        name: "Deploy to Staging"
+        # trigger: 'manual'
+        services:
+        - docker
+        script:
+        - pwd
+        - ls -la
+        - docker ps -a
+        - docker info
+        - docker -v
+        - whoami
+        - apt update -y && apt install jq -y
+        - apt-get -y install apt-transport-https ca-certificates curl git gnupg-agent software-properties-common jq
+        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+        - apt-key fingerprint 0EBFCD88
+        - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        - apt-get update
+        - curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+        - chmod +x /usr/local/bin/docker-compose
+        - docker-compose --version
+        - sh ./bin/pipeline/setup_pipeline.sh stag
+        - chmod +x ./bin/pipeline/runpipeline.sh
+        - ./bin/pipeline/runpipeline.sh stag
+    branches:
+          only:
+            - development            
+            - main

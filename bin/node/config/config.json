@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "CwmHFTMoS6TXqupE4DF9KqUXkj7juh8A6mSk",
+    "database": "application",
+    "host": "pxc",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "CwmHFTMoS6TXqupE4DF9KqUXkj7juh8A6mSk",
+    "database": "application",
+    "host": "pxc",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "CwmHFTMoS6TXqupE4DF9KqUXkj7juh8A6mSk",
+    "database": "application",
+    "host": "pxc",
+    "dialect": "mysql"
+  }
+}

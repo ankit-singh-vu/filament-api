@@ -1,0 +1,95 @@
+{
+    "Job": {
+  "Datacenters": ["dc1"],
+  "ID": "agent",
+  "Type": "system",
+  "NodePool": "default",
+  "TaskGroups": [
+    {
+      "Name": "agent-app",
+      "RestartPolicy": {
+        "Attempts": 10,
+        "Interval": 300000000000,
+        "Delay": 25000000000,
+        "Mode": "delay",
+        "RenderTemplates": false
+    },
+      "Networks": [
+        {
+          "DNS": {
+            "Servers": [
+                "192.168.0.19",
+                "192.168.0.170"
+            ],
+            "Searches": null,
+            "Options": null
+        },
+        "ReservedPorts": [
+          {
+              "Label": "http",
+              "Value": 8855,
+              "To": 80,
+              "HostNetwork": "public"
+          },
+          {
+              "Label": "node",
+              "Value": 8858,
+              "To": 0,
+              "HostNetwork": "public"
+          },
+          {
+              "Label": "https",
+              "Value": 8856,
+              "To": 443,
+              "HostNetwork": "public"
+          }
+      ],
+      "DynamicPorts": null
+        }
+      ],
+      "Services": [
+        {
+          "Name": "agent-app",
+          "PortLabel": "http"
+        }
+      ],
+      "Tasks": [
+        {
+          "Name": "agent-app",
+          "Driver": "docker",
+          "Config": {
+            "auth": [
+              {
+                  "server_address": "registry.docker.convesio.com:5005",
+                  "username": "teamdev",
+                  "password": "kxhFpEcgh2b63wV9B66rJVvFxxV36Gup"
+              }
+          ],
+          "ports": [
+              "http",
+              "https",
+              "node"
+          ],
+          "privileged": true,
+          "image": "registry.docker.convesio.com:5005/v4/application/agent:4.1",
+          "volumes": [
+            "/dev:/dev:shared",
+            "/convesio:/convesio:shared",
+            "/data/mountdata:/var/www/html/mountdata",
+            "/data/agent/sqlite/db:/var/www/html/database",
+            "/data/nginxconf:/loadbalancer/nginx/conf"
+        ]
+          },
+          "Env": {
+            "APPLICATION_DOMAIN": "api.qa.dev.convesio.com",
+            "APPLICATION_NAME": "agent",
+            "APPLICATION_TIME_ZONE": "Asia/Kolkata",
+            "NGINX_LOADBALNCER_URL": "http://nginx-loadbalancer.service.consul:8546/",
+            "AGENT_ACCESS_TOKEN": "2TLg6qELGqanxhNtv2ozhxbYDBxlEZFon5RNuFQs"
+        }
+        }
+      ]
+    }
+  ]
+  }
+  }
