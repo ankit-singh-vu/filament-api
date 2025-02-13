@@ -9,3 +9,5 @@
 5. run `sudo ./inital_setup.sh your_non_root_user`
 5. run `vagrant up` 
 6. Now You will see admin username and password inside the logs
+7. open baseurl/admin in browser to see admin panel
+8. open baseurl/api/test to test if api is working 
