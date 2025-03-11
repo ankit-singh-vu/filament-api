@@ -11,3 +11,5 @@
 6. Now You will see admin username and password inside the logs
 7. open baseurl/admin in browser to see admin panel
 8. open baseurl/api/test to test if api is working 
+9. open http://192.168.62.101:5540/  for redis insight
+
